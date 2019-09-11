@@ -13,5 +13,16 @@ namespace RequestDispatcher.Test.RequestDispatcher
     {
         protected override async Task CallSend(HttpMethod method, string path, CancellationToken token = default)
             => sendResult = await requestDispatcher.SendAsync<object>(method, path, token);
+
+        [TestMethod]
+        public virtual async Task CallsDeserializeWithReturnedContent()
+        {
+            messageHandler.ResponseHandler = r => responseMessage;
+
+            await CallSend(HttpMethod.Get, "http://localhost");
+
+            Assert.AreEqual(1, messageHandler.CallCount);
+            serializerMock.Verify(s => s.DeserializeAsync<object>(serializedResponseContent));
+        }
     }
 }
