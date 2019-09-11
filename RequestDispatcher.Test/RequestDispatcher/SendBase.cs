@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace RequestDispatcher.Test.RequestDispatcher
 {
-    public class SendBase
+    public abstract class SendBase
     {
         protected TestHttpMessageHandler messageHandler;
         protected HttpClient httpClient;
         protected BaseRequestDispatcher requestDispatcher;
+
+        protected abstract Task CallSend(HttpMethod method, string path, CancellationToken token = default(CancellationToken));
 
         [TestInitialize]
         public void Initialize()
@@ -33,7 +35,7 @@ namespace RequestDispatcher.Test.RequestDispatcher
             var method = new HttpMethod(methodName);
 
             // Act
-            await requestDispatcher.SendAsync(method, "http://localhost");
+            await CallSend(method, "http://localhost");
 
             // Assert
             Assert.AreEqual(1, messageHandler.CallCount);
@@ -47,7 +49,7 @@ namespace RequestDispatcher.Test.RequestDispatcher
         public async Task SetsPathToRequestMessage(string path)
         {
             // Act
-            await requestDispatcher.SendAsync(HttpMethod.Get, path);
+            await CallSend(HttpMethod.Get, path);
 
             // Assert
             Assert.AreEqual(1, messageHandler.CallCount);
@@ -62,7 +64,7 @@ namespace RequestDispatcher.Test.RequestDispatcher
             cts.Cancel();
 
             // Act
-            await requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost", cts.Token);
+            await CallSend(HttpMethod.Get, "http://localhost", cts.Token);
         }
     }
 }
