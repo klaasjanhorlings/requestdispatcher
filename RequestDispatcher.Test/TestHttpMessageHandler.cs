@@ -13,13 +13,14 @@ namespace RequestDispatcher.Test
         public int CallCount { get; private set; } = 0;
         public HttpRequestMessage LastRequestMessage { get; private set; }
         public HttpResponseMessage LastResponseMessage { get; private set; }
+        public Func<HttpRequestMessage, HttpResponseMessage> ResponseHandler { get; set; }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             CallCount++;
 
             LastRequestMessage = request;
-            LastResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+            LastResponseMessage = ResponseHandler?.Invoke(request) ?? new HttpResponseMessage(HttpStatusCode.OK);
 
             return Task.FromResult(LastResponseMessage);
         }
