@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestDispatcher", "RequestDispatcher\RequestDispatcher.csproj", "{98A77F95-81BB-4C2D-B065-2B9F095C6F00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98A77F95-81BB-4C2D-B065-2B9F095C6F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98A77F95-81BB-4C2D-B065-2B9F095C6F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98A77F95-81BB-4C2D-B065-2B9F095C6F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98A77F95-81BB-4C2D-B065-2B9F095C6F00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {44F2BE14-CE81-4D24-9B9F-08B937E31561}
+	EndGlobalSection
+EndGlobal
