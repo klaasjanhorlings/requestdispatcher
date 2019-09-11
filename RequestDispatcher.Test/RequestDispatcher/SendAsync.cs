@@ -30,5 +30,25 @@ namespace RequestDispatcher.Test.RequestDispatcher
             Assert.AreEqual(1, messageHandler.CallCount);
             Assert.AreEqual(method, messageHandler.LastRequestMessage.Method);
         }
+
+
+        [TestMethod]
+        [DataRow("http://localhost")]
+        [DataRow("https://www.capteur.nl")]
+        [DataRow("http://goatse.cx")]
+        public async Task SetsPathToRequestMessage(string path)
+        {
+            // Arrange
+            var messageHandler = new TestHttpMessageHandler();
+            var httpClient = new HttpClient(messageHandler);
+            var requestDispatcher = new BaseRequestDispatcher(httpClient);
+
+            // Act
+            await requestDispatcher.SendAsync(HttpMethod.Get, path);
+
+            // Assert
+            Assert.AreEqual(1, messageHandler.CallCount);
+            Assert.AreEqual(new Uri(path), messageHandler.LastRequestMessage.RequestUri);
+        }
     }
 }
