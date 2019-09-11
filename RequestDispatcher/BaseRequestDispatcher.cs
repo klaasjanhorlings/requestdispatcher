@@ -64,6 +64,12 @@ namespace RequestDispatcher
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
+                if (response.Content != null && response.Content.Headers.ContentLength > 0)
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    throw new HttpErrorResponseException(response.StatusCode, message);
+                }
+
                 throw new HttpErrorResponseException(response.StatusCode);
             }
 
