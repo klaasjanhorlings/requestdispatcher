@@ -44,7 +44,8 @@ namespace RequestDispatcher
             cancellationToken.ThrowIfCancellationRequested();
 
             var request = new HttpRequestMessage(method, path);
-            await httpClient.SendAsync(request, cancellationToken);
+            var response = await httpClient.SendAsync(request, cancellationToken);
+            await ContentSerializer.DeserializeAsync<TResponse>(response.Content);
 
             return await Task.FromResult(default(TResponse));
         }
