@@ -24,5 +24,16 @@ namespace RequestDispatcher.Test.RequestDispatcher
             Assert.AreEqual(1, messageHandler.CallCount);
             serializerMock.Verify(s => s.DeserializeAsync<object>(serializedResponseContent));
         }
+
+        [TestMethod]
+        public virtual async Task ReturnsDeserializedResult()
+        {
+            messageHandler.ResponseHandler = r => responseMessage;
+
+            await CallSend(HttpMethod.Get, "http://localhost");
+
+            Assert.AreEqual(1, messageHandler.CallCount);
+            Assert.AreEqual(responseContent, sendResult);
+        }
     }
 }
