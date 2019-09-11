@@ -25,7 +25,7 @@ namespace RequestDispatcher.Test
             OnErrorResponseCallCount++;
             LastOnErrorResponseMessage = response;
 
-            return base.OnErrorResponse(response);
+            return Task.CompletedTask;
         }
 
         protected override void SetHeaders(HttpRequestMessage request)

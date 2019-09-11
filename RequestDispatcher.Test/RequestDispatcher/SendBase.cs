@@ -126,7 +126,6 @@ namespace RequestDispatcher.Test.RequestDispatcher
             }
         }
 
-
         [TestMethod]
         public async Task CallsSetHeadersWithHttpRequestMessage()
         {
@@ -140,6 +139,23 @@ namespace RequestDispatcher.Test.RequestDispatcher
             // Assert
             Assert.AreEqual(1, ((TestRequestDispatcher)requestDispatcher).SetHeadersCallCount);
             Assert.IsNotNull(((TestRequestDispatcher)requestDispatcher).LastSetHeadersMessage);
+        }
+
+        [TestMethod]
+        public async Task CallsOnErrorResponseWithHttpResponseMessage()
+        {
+            // Arrange
+            requestDispatcher = new TestRequestDispatcher(httpClient);
+            requestDispatcher.ContentSerializer = serializerMock.Object;
+
+            messageHandler.ResponseHandler = r => new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            // Act
+            await CallSend(HttpMethod.Get, "http://localhost");
+
+            // Assert
+            Assert.AreEqual(1, ((TestRequestDispatcher)requestDispatcher).OnErrorResponseCallCount);
+            Assert.IsNotNull(((TestRequestDispatcher)requestDispatcher).LastOnErrorResponseMessage);
         }
     }
 }
