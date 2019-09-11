@@ -50,9 +50,15 @@ namespace RequestDispatcher
             return await Task.FromResult(result);
         }
 
-        public Task<TResponse> SendAsync<TResponse, TRequest>(HttpMethod method, string path, TRequest body, CancellationToken cancellationToken = default)
+        public async Task<TResponse> SendAsync<TResponse, TRequest>(HttpMethod method, string path, TRequest body, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var request = new HttpRequestMessage(method, path);
+            await httpClient.SendAsync(request, cancellationToken);
+
+            return await Task.FromResult(default(TResponse));
+
         }
     }
 }
