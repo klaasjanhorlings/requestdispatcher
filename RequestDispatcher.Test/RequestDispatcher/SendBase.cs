@@ -17,7 +17,7 @@ namespace RequestDispatcher.Test.RequestDispatcher
         protected abstract Task CallSend(HttpMethod method, string path, CancellationToken token = default(CancellationToken));
 
         [TestInitialize]
-        public void Initialize()
+        public void InitializeBase()
         {
             messageHandler = new TestHttpMessageHandler();
             httpClient = new HttpClient(messageHandler);
