@@ -55,10 +55,11 @@ namespace RequestDispatcher
             cancellationToken.ThrowIfCancellationRequested();
 
             var request = new HttpRequestMessage(method, path);
-            await httpClient.SendAsync(request, cancellationToken);
+            request.Content = contentSerializer.Serialize(body);
+            var response = await httpClient.SendAsync(request, cancellationToken);
+            var result = await ContentSerializer.DeserializeAsync<TResponse>(response.Content);
 
-            return await Task.FromResult(default(TResponse));
-
+            return await Task.FromResult(result);
         }
     }
 }
