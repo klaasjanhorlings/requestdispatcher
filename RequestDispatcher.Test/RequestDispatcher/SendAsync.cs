@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RequestDispatcher.Test.RequestDispatcher
 {
@@ -10,19 +11,24 @@ namespace RequestDispatcher.Test.RequestDispatcher
     public class SendAsync
     {
         [TestMethod]
-        public void SetsHttpMethodToRequestMessage()
+        [DataRow("get")]
+        [DataRow("post")]
+        [DataRow("put")]
+        [DataRow("head")]
+        public async Task SetsHttpMethodToRequestMessage(string methodName)
         {
             // Arrange
             var messageHandler = new TestHttpMessageHandler();
             var httpClient = new HttpClient(messageHandler);
             var requestDispatcher = new BaseRequestDispatcher(httpClient);
+            var method = new HttpMethod(methodName);
 
             // Act
-            requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost");
+            await requestDispatcher.SendAsync(method, "http://localhost");
 
             // Assert
             Assert.AreEqual(1, messageHandler.CallCount);
-            Assert.AreEqual(HttpMethod.Get, messageHandler.LastRequestMessage.Method);
+            Assert.AreEqual(method, messageHandler.LastRequestMessage.Method);
         }
     }
 }

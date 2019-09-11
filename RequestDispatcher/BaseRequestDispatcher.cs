@@ -16,7 +16,7 @@ namespace RequestDispatcher
 
         public async Task SendAsync(HttpMethod method, string path, CancellationToken cancellationToken = default)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, path);
+            var request = new HttpRequestMessage(method, path);
             await httpClient.SendAsync(request);
         }
 
