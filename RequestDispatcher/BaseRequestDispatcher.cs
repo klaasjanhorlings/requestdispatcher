@@ -57,6 +57,19 @@ namespace RequestDispatcher
             return await Task.FromResult(result);
         }
 
+        protected virtual void SetHeaders(HttpRequestMessage request) { }
+
+        protected virtual async Task OnErrorResponse(HttpResponseMessage response)
+        {
+            if (response.Content != null && response.Content.Headers.ContentLength > 0)
+            {
+                var message = await response.Content.ReadAsStringAsync();
+                throw new HttpErrorResponseException(response.StatusCode, message);
+            }
+
+            throw new HttpErrorResponseException(response.StatusCode);
+        }
+
         private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -64,13 +77,7 @@ namespace RequestDispatcher
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
-                if (response.Content != null && response.Content.Headers.ContentLength > 0)
-                {
-                    var message = await response.Content.ReadAsStringAsync();
-                    throw new HttpErrorResponseException(response.StatusCode, message);
-                }
-
-                throw new HttpErrorResponseException(response.StatusCode);
+                await OnErrorResponse(response);
             }
 
             return response;
