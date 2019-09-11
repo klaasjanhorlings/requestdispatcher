@@ -7,6 +7,13 @@ namespace RequestDispatcher
 {
     public class BaseRequestDispatcher : IRequestDispatcher
     {
+        private readonly HttpClient httpClient;
+
+        public BaseRequestDispatcher(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
+
         public Task SendAsync(HttpMethod method, string path, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();

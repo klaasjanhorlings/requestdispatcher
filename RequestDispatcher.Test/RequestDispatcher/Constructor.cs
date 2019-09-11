@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace RequestDispatcher.Test.RequestDispatcher
 {
@@ -6,8 +7,10 @@ namespace RequestDispatcher.Test.RequestDispatcher
     public class Constructor
     {
         [TestMethod]
-        public void TestMethod1()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ThrowsWhenCalledWithNullForHttpClient()
         {
+            new BaseRequestDispatcher(null);
         }
     }
 }
