@@ -45,9 +45,9 @@ namespace RequestDispatcher
 
             var request = new HttpRequestMessage(method, path);
             var response = await httpClient.SendAsync(request, cancellationToken);
-            await ContentSerializer.DeserializeAsync<TResponse>(response.Content);
+            var result = await ContentSerializer.DeserializeAsync<TResponse>(response.Content);
 
-            return await Task.FromResult(default(TResponse));
+            return await Task.FromResult(result);
         }
 
         public Task<TResponse> SendAsync<TResponse, TRequest>(HttpMethod method, string path, TRequest body, CancellationToken cancellationToken = default)
