@@ -10,6 +10,18 @@ namespace RequestDispatcher.Test.RequestDispatcher
     [TestClass]
     public class SendAsync
     {
+        private TestHttpMessageHandler messageHandler;
+        private HttpClient httpClient;
+        private BaseRequestDispatcher requestDispatcher;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            messageHandler = new TestHttpMessageHandler();
+            httpClient = new HttpClient(messageHandler);
+            requestDispatcher = new BaseRequestDispatcher(httpClient);
+        }
+
         [TestMethod]
         [DataRow("get")]
         [DataRow("post")]
@@ -18,9 +30,6 @@ namespace RequestDispatcher.Test.RequestDispatcher
         public async Task SetsHttpMethodToRequestMessage(string methodName)
         {
             // Arrange
-            var messageHandler = new TestHttpMessageHandler();
-            var httpClient = new HttpClient(messageHandler);
-            var requestDispatcher = new BaseRequestDispatcher(httpClient);
             var method = new HttpMethod(methodName);
 
             // Act
@@ -31,18 +40,12 @@ namespace RequestDispatcher.Test.RequestDispatcher
             Assert.AreEqual(method, messageHandler.LastRequestMessage.Method);
         }
 
-
         [TestMethod]
         [DataRow("http://localhost")]
         [DataRow("https://www.capteur.nl")]
         [DataRow("http://goatse.cx")]
         public async Task SetsPathToRequestMessage(string path)
         {
-            // Arrange
-            var messageHandler = new TestHttpMessageHandler();
-            var httpClient = new HttpClient(messageHandler);
-            var requestDispatcher = new BaseRequestDispatcher(httpClient);
-
             // Act
             await requestDispatcher.SendAsync(HttpMethod.Get, path);
 
