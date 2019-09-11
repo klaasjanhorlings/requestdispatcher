@@ -14,9 +14,10 @@ namespace RequestDispatcher
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public Task SendAsync(HttpMethod method, string path, CancellationToken cancellationToken = default)
+        public async Task SendAsync(HttpMethod method, string path, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var request = new HttpRequestMessage(HttpMethod.Get, path);
+            await httpClient.SendAsync(request);
         }
 
         public Task SendAsync<TRequest>(HttpMethod method, string path, TRequest body, CancellationToken cancellationToken = default)
