@@ -23,28 +23,24 @@ namespace RequestDispatcher
 
         public async Task SendAsync(HttpMethod method, string path, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
 
             var request = new HttpRequestMessage(method, path);
-            await httpClient.SendAsync(request, cancellationToken);
+            await SendAsync(request, cancellationToken);
         }
 
         public async Task SendAsync<TRequest>(HttpMethod method, string path, TRequest body, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var request = new HttpRequestMessage(method, path);            
             request.Content = ContentSerializer.Serialize(body);
 
-            await httpClient.SendAsync(request, cancellationToken);
+            await SendAsync(request, cancellationToken);
         }
 
         public async Task<TResponse> SendAsync<TResponse>(HttpMethod method, string path, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var request = new HttpRequestMessage(method, path);
-            var response = await httpClient.SendAsync(request, cancellationToken);
+
+            var response = await SendAsync(request, cancellationToken);
             var result = await ContentSerializer.DeserializeAsync<TResponse>(response.Content);
 
             return await Task.FromResult(result);
@@ -52,14 +48,26 @@ namespace RequestDispatcher
 
         public async Task<TResponse> SendAsync<TResponse, TRequest>(HttpMethod method, string path, TRequest body, CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var request = new HttpRequestMessage(method, path);
             request.Content = contentSerializer.Serialize(body);
-            var response = await httpClient.SendAsync(request, cancellationToken);
+
+            var response = await SendAsync(request, cancellationToken);
             var result = await ContentSerializer.DeserializeAsync<TResponse>(response.Content);
 
             return await Task.FromResult(result);
+        }
+
+        private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpErrorResponseException(response.StatusCode);
+            }
+
+            return response;
         }
     }
 }
