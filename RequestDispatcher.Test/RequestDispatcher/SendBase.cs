@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,6 +15,10 @@ namespace RequestDispatcher.Test.RequestDispatcher
         protected HttpClient httpClient;
         protected BaseRequestDispatcher requestDispatcher;
 
+        protected object requestContent;
+        protected StringContent serializedRequestContent;
+        protected Mock<IContentSerializer> serializerMock;
+
         protected abstract Task CallSend(HttpMethod method, string path, CancellationToken token = default(CancellationToken));
 
         [TestInitialize]
@@ -22,6 +27,12 @@ namespace RequestDispatcher.Test.RequestDispatcher
             messageHandler = new TestHttpMessageHandler();
             httpClient = new HttpClient(messageHandler);
             requestDispatcher = new BaseRequestDispatcher(httpClient);
+
+            requestContent = new object();
+            serializedRequestContent = new StringContent("request");
+            serializerMock = new Mock<IContentSerializer>();
+            serializerMock.Setup(s => s.Serialize(requestContent)).Returns(serializedRequestContent);
+            requestDispatcher.ContentSerializer = serializerMock.Object;
         }
 
         [TestMethod]
