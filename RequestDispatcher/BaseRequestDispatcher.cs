@@ -9,6 +9,13 @@ namespace RequestDispatcher
     {
         private readonly HttpClient httpClient;
 
+        private IContentSerializer contentSerializer;
+        public IContentSerializer ContentSerializer
+        {
+            get => contentSerializer;
+            set => contentSerializer = value ?? throw new ArgumentNullException(nameof(ContentSerializer));
+        }
+
         public BaseRequestDispatcher(HttpClient httpClient)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
