@@ -33,7 +33,9 @@ namespace RequestDispatcher
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            ContentSerializer.Serialize(body);
             var request = new HttpRequestMessage(method, path);
+
             await httpClient.SendAsync(request, cancellationToken);
         }
 
