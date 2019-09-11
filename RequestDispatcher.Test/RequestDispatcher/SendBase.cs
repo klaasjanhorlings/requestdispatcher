@@ -91,5 +91,14 @@ namespace RequestDispatcher.Test.RequestDispatcher
             // Act
             await CallSend(HttpMethod.Get, "http://localhost", cts.Token);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(HttpErrorResponseException))]
+        public async Task ThrowsOnInvalidHttpStatus()
+        {
+            messageHandler.ResponseHandler = r => new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            await CallSend(HttpMethod.Get, "http://localhost");
+        }
     }
 }
