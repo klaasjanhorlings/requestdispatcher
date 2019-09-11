@@ -11,7 +11,7 @@ namespace RequestDispatcher
 
         public BaseRequestDispatcher(HttpClient httpClient)
         {
-            this.httpClient = httpClient;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public Task SendAsync(HttpMethod method, string path, CancellationToken cancellationToken = default)
