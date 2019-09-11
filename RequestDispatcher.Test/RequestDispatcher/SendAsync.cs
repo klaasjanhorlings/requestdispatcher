@@ -12,12 +12,17 @@ namespace RequestDispatcher.Test.RequestDispatcher
         [TestMethod]
         public void SetsHttpMethodToRequestMessage()
         {
+            // Arrange
             var messageHandler = new TestHttpMessageHandler();
             var httpClient = new HttpClient(messageHandler);
             var requestDispatcher = new BaseRequestDispatcher(httpClient);
+
+            // Act
             requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost");
 
-            // Check HttpClient.Send call arguments??
+            // Assert
+            Assert.AreEqual(1, messageHandler.CallCount);
+            Assert.AreEqual(HttpMethod.Get, messageHandler.LastRequestMessage.Method);
         }
     }
 }
