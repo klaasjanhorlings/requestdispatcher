@@ -125,5 +125,21 @@ namespace RequestDispatcher.Test.RequestDispatcher
                 Assert.IsTrue(exceptionThrown);
             }
         }
+
+
+        [TestMethod]
+        public async Task CallsSetHeadersWithHttpRequestMessage()
+        {
+            // Arrange
+            requestDispatcher = new TestRequestDispatcher(httpClient);
+            requestDispatcher.ContentSerializer = serializerMock.Object;
+
+            // Act
+            await CallSend(HttpMethod.Get, "http://localhost");
+
+            // Assert
+            Assert.AreEqual(1, ((TestRequestDispatcher)requestDispatcher).SetHeadersCallCount);
+            Assert.IsNotNull(((TestRequestDispatcher)requestDispatcher).LastSetHeadersMessage);
+        }
     }
 }
