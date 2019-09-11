@@ -12,6 +12,6 @@ namespace RequestDispatcher.Test.RequestDispatcher
     public class SendAsyncWithResponseContent : SendBase
     {
         protected override async Task CallSend(HttpMethod method, string path, CancellationToken token = default)
-            => await requestDispatcher.SendAsync<object>(method, path, token);
+            => sendResult = await requestDispatcher.SendAsync<object>(method, path, token);
     }
 }

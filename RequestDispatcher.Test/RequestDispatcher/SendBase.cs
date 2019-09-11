@@ -2,6 +2,7 @@
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -19,6 +20,12 @@ namespace RequestDispatcher.Test.RequestDispatcher
         protected StringContent serializedRequestContent;
         protected Mock<IContentSerializer> serializerMock;
 
+        protected object responseContent;
+        protected HttpResponseMessage responseMessage;
+        protected HttpContent serializedResponseContent;
+
+        protected object sendResult;
+
         protected abstract Task CallSend(HttpMethod method, string path, CancellationToken token = default(CancellationToken));
 
         [TestInitialize]
@@ -30,7 +37,14 @@ namespace RequestDispatcher.Test.RequestDispatcher
 
             requestContent = new object();
             serializedRequestContent = new StringContent("request");
+
+            responseContent = new object();
+            serializedResponseContent = new StringContent("response");
+            responseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+            responseMessage.Content = serializedResponseContent;
+
             serializerMock = new Mock<IContentSerializer>();
+            serializerMock.Setup(s => s.DeserializeAsync<object>(serializedResponseContent)).Returns(Task.FromResult(responseContent));
             serializerMock.Setup(s => s.Serialize(requestContent)).Returns(serializedRequestContent);
             requestDispatcher.ContentSerializer = serializerMock.Object;
         }

@@ -23,7 +23,7 @@ namespace RequestDispatcher.Test.RequestDispatcher
             await requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost", requestContent);
 
             // Assert
-            serializerMock.VerifyAll();
+            serializerMock.Verify(s => s.Serialize(requestContent));
         }
 
         [TestMethod]
