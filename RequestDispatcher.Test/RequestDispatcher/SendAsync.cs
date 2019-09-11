@@ -12,7 +12,8 @@ namespace RequestDispatcher.Test.RequestDispatcher
         [TestMethod]
         public void SetsHttpMethodToRequestMessage()
         {
-            var httpClient = new HttpClient();
+            var messageHandler = new TestHttpMessageHandler();
+            var httpClient = new HttpClient(messageHandler);
             var requestDispatcher = new BaseRequestDispatcher(httpClient);
             requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost");
 
