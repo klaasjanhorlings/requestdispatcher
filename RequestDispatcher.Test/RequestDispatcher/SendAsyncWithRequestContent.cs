@@ -6,7 +6,7 @@ using System.Text;
 namespace RequestDispatcher.Test.RequestDispatcher
 {
     [TestClass]
-    public class SendAsyncWithRequestContent
+    public class SendAsyncWithRequestContent: SendBase
     {
     }
 }
