@@ -100,5 +100,30 @@ namespace RequestDispatcher.Test.RequestDispatcher
 
             await CallSend(HttpMethod.Get, "http://localhost");
         }
+
+        [TestMethod]
+        public async Task SetsContentAndHttpStatusCodeToException()
+        {
+            var exceptionThrown = false;
+            var response = new HttpResponseMessage(HttpStatusCode.BadRequest);
+            response.Content = new StringContent("content");
+            messageHandler.ResponseHandler = r => response;
+
+            try
+            {
+                await CallSend(HttpMethod.Get, "http://localhost");
+            }
+            catch (HttpErrorResponseException e)
+            {
+                exceptionThrown = true;
+
+                Assert.AreEqual("content", e.Message);
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.HttpStatusCode);
+            }
+            finally
+            {
+                Assert.IsTrue(exceptionThrown);
+            }
+        }
     }
 }
