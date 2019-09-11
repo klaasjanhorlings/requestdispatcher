@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RequestDispatcher.Test.RequestDispatcher
@@ -52,6 +53,17 @@ namespace RequestDispatcher.Test.RequestDispatcher
             // Assert
             Assert.AreEqual(1, messageHandler.CallCount);
             Assert.AreEqual(new Uri(path), messageHandler.LastRequestMessage.RequestUri);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public async Task ThrowsWhenPassedCancelledToken()
+        {
+            var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            // Act
+            await requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost", cts.Token);
         }
     }
 }
