@@ -10,30 +10,16 @@ using System.Threading.Tasks;
 namespace RequestDispatcher.Test.RequestDispatcher
 {
     [TestClass]
-    public class SendAsyncWithRequestContent : SendBase
+    public class SendAsyncWithRequestContent : SendContentBase
     {
 
         protected override async Task CallSend(HttpMethod method, string path, CancellationToken token = default)
-            => await requestDispatcher.SendAsync(method, path, new object(), token);
-        
-        [TestMethod]
-        public async Task CallsSerializeWithPassedContent()
-        {
-            // Act
-            await requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost", requestContent);
-
-            // Assert
-            serializerMock.Verify(s => s.Serialize(requestContent));
-        }
+            => await requestDispatcher.SendAsync(method, path, requestContent, token);
 
         [TestMethod]
-        public async Task SetsSerializedContentToRequestMessage()
-        {
-            // Act
-            await requestDispatcher.SendAsync(HttpMethod.Get, "http://localhost", requestContent);
+        public override async Task CallsSerializeWithPassedContent() => await base.CallsSerializeWithPassedContent();
 
-            // Assert
-            Assert.AreEqual(serializedRequestContent, messageHandler.LastRequestMessage.Content);
-        }
+        [TestMethod]
+        public override async Task SetsSerializedContentToRequestMessage() => await base.SetsSerializedContentToRequestMessage();
     }
 }
