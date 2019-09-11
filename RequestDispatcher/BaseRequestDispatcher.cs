@@ -74,6 +74,8 @@ namespace RequestDispatcher
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            SetHeaders(request);
+
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
